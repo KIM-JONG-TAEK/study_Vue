@@ -2,14 +2,14 @@
   <section class="container">
     <!-- <h2>{{ userName }}</h2>
     <h3>{{ age }}</h3> -->
-    <h2>{{ userName }}</h2>
-    <h3>{{ age }}</h3>
+    <user-data class="test" :first-name="firstName" :last-name="lastName"></user-data>
     <button @click="setAge">Change Age</button>
     <div>
       <!-- <input type="text" placeholder="First Name" @input="setFirstName" />
       <input type="text" placeholder="Last Name" @input="setLastName" /> -->
       <input type="text" placeholder="First Name" v-model="firstName" />
-      <input type="text" placeholder="Last Name" v-model="lastName" />
+      <input type="text" placeholder="Last Name" ref="lastNameInput" />
+      <button @click="setLastName">Set Last Name</button>
     </div>
   </section>
 </template>
@@ -18,13 +18,18 @@
 // import { ref } from 'vue';
 // import { reactive } from 'vue';
 // import { reactive, toRefs } from 'vue';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, provide } from 'vue';
+import UserData from './components/UserData.vue';
 
 export default {
+  components: {
+    UserData
+  },
   setup() {
     // const uName = ref('Kerwin');
     const firstName = ref('');
     const lastName = ref('');
+    const lastNameInput = ref(null);
     const uAge = ref(29);
 
     // const user = ref({
@@ -36,6 +41,8 @@ export default {
     //   name: 'Kerwin',
     //   age: 29
     // });
+
+      provide('userAge', uAge);
 
     const uName = computed(function () {
       return firstName.value + ' ' + lastName.value;
@@ -50,6 +57,10 @@ export default {
 
     function setNewAge() {
       uAge.value = 30;
+    }
+
+    function setLastName() {
+      lastName.value = lastNameInput.value.value;
     }
 
     // function setFirstName(event) {
@@ -73,7 +84,7 @@ export default {
 
     // const userRefs = toRefs(user);
 
-    return { userName: uName, age: uAge, setAge: setNewAge, firstName, lastName };
+    return { userName: uName, age: uAge, setAge: setNewAge, firstName, lastName, lastNameInput, setLastName };
     // return { user: user, userName: userRefs.name, age: userRefs.age };
     // return { user: user, setAge: setNewAge };
   },
@@ -93,6 +104,9 @@ export default {
   //     console.log(val);
   //   }
   // },
+  // provide() {
+  //   return { age: this.age };
+  // }
 };
 </script>
 
